@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}写文章{% endblock title %}
+
+{% block extra_head %}
+{{ form.media }}
+{% endblock extra_head %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <form method="post" action=".">
+                {% csrf_token %}
+                {{ article_post_form.media }}
+                {{ article_post_form.as_p }}
+                <button type="submit" class="btn btn-primary">提交</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

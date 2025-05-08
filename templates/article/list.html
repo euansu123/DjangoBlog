@@ -1,0 +1,91 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load static %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+首页
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+
+<!-- 定义放置文章标题的div容器 -->
+<div class="container text-center">
+    <div class="row">
+        <div class="col-8 my-3">
+            <ul class="list-group list-group-flush">
+                {% for article in articles %}
+                <li class="list-group-item">
+                    <div class="container text-center">
+                        <div class="row">
+                            <!-- <p href="{% url 'article:article_detail' article.id %}" class="fs-2 font-monospace text-start fw-bold">{{ article.title }}</p> -->
+                            <a href="{% url 'article:article_detail' article.id %}"
+                                class="fs-3 font-monospace text-start fw-bold text-decoration-none text-dark">
+                                {{ article.title }}
+                            </a>
+
+                        </div>
+                        <div class="row">
+                            <p class="fs-6 font-monospace text-start">{{ article.updated | date:"Y年n月j日"}}</p>
+                        </div>
+                        <div class="row">
+                            <div class="d-grid gap-2 col-2 ms-auto">
+                                <a href="{% url 'article:article_detail' article.id %}" class="btn btn-success">阅读本文</a>
+                                <!-- <button class="btn btn-success" type="button">
+                                    阅读原文
+                                </button> -->
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+
+                    <!-- 只有不是一页的时候，才需要展示前一页的按钮 -->
+                    {% if articles.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ articles.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% if page_list|length > 1 %}
+                    <!-- 页码展示 -->
+                    {% for item in page_list %}
+                    <li class="page-item"><a class="page-link" href="?page={{ item }}">{{item}}</a></li>
+                    {% endfor %}
+                    {% endif %}
+
+                    <!-- 只有不是最后一页的时候，才需要展示下一页的按钮 -->
+                    {% if articles.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ articles.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+        </div>
+        <div class="col-4 my-3">
+            <!-- 头像及博客简介 -->
+             <div style="margin-top: 50px;">
+                <img src="/media/avatar.jpg" alt="Circular Image" class="rounded-circle fixed-size" style="width: 100px;height: 100px;">
+                <br>
+                <p style="margin-top: 19px;">南歌EuanSu</p>
+
+             </div>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

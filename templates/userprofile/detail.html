@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% load static %}
+{% block title %} 用户信息 {% endblock title %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <br>
+            <div class="col-12">用户名: {{ user.username }}</div>
+            <br>
+            {% if user.avatar %}
+            <!-- <div class="col-6">头像</div> -->
+            <img src="{{ user.avatar.url }}" style="max-width: 20%; border-radius: 15%;" class="col-md-4">
+            <br>
+            {% else %}
+            <h5 class="col-6">暂无头像</h5>
+            {% endif %}
+            <br>
+            <div class="col-12">简介: {{ user.bio }}</div>
+            <br>
+            <div class="col-12">电话: {{ user.phone }}</div>
+            <br>
+            <div class="col-12">邮箱: {{ user.email }}</div>
+            <br>
+        </div>
+    </div>
+</div>
+{% endblock content %}

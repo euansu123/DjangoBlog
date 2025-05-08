@@ -1,0 +1,60 @@
+{% extends "base.html" %} {% load static %}
+{% block title %} 用户信息 {% endblock title %}
+{% block content %}
+
+<!-- 失败告警 -->
+{% if msg %}
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+                {{msg}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <br>
+            <div class="col-12">用户名: {{ user.username }}</div>
+            <br>
+            {% if user.avatar %}
+            <!-- <div class="col-6">头像</div> -->
+            <img src="{{ user.avatar.url }}" style="max-width: 20%; border-radius: 15%;" class="col-md-4">
+            <br>
+            {% else %}
+            <h5 class="col-6">暂无头像</h5>
+            {% endif %}
+            <br>
+            <form method="post" action="."  enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="avatar">上传头像</label>
+                    <input type="file" class="form-control-file" name="avatar" id="avatar">
+                </div>
+                <!-- email -->
+                <div class="form-group col-12">
+                    <label for="email">邮箱</label>
+                    <input type="text" class="form-control" id="email" name="email" value="{{ user.email }}">
+                </div>
+                <!-- phone -->
+                <div class="form-group col-12">
+                    <label for="phone">电话</label>
+                    <input type="text" class="form-control" id="phone" name="phone" value="{{ user.phone }}">
+                </div>
+                <!-- bio -->
+                <div class="form-group col-12">
+                    <label for="bio">简介</label>
+                    <textarea type="text" class="form-control" id="bio" name="bio" rows="12">{{ user.bio }}</textarea>
+                </div>
+                <!-- 提交按钮 -->
+                <button type="submit" class="btn btn-primary my-3">提交</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
