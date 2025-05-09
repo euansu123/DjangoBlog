@@ -1,0 +1,38 @@
+# Python
+*.py[cod]
+__pycache__/
+*.so
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+static/
+staticfiles/
+
+# 虚拟环境
+DjangoEnv/
+venv/
+env/
+.env
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# IDE - PyCharm
+.idea/
+*.iml
+*.iws
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 其他
+*.bak
+*.swp
+*.swo
+*~

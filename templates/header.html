@@ -44,7 +44,8 @@
       <!-- 如果用户未登录，则显示 “登录” -->
       {% else %}
       <!-- <button type="button" class="btn btn-outline-primary me-2" href="{% url 'userprofile:login' %}">Login</button> -->
-      <a href="{% url 'userprofile:login' %}" class="btn btn-outline-primary me-2">Login</a>
+      <a href="{% url 'userprofile:login' %}" class="nav-link me-2 link-secondary">登录</a>
+      <a href="{% url 'userprofile:register' %}" class="nav-link me-2 link-secondary">注册</a>
       <!-- if 语句在这里结束 -->
       {% endif %}
     </div>

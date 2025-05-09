@@ -32,3 +32,29 @@
 .toc .nav-link.level-3 {
     padding-left: 2.5rem;
 }
+
+.toc-content ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.toc-content ul ul {
+    padding-left: 1.5rem;
+}
+
+.toc-content a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.25rem 0;
+    font-size: 0.95rem;
+}
+
+.toc-content a:hover {
+    color: #007bff;
+}
+
+.toc-content > ul > li > a {
+    font-weight: 500;
+}
