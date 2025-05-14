@@ -3,6 +3,22 @@
 
 {% block title %}专题 | {{SITE_NAME}} {% endblock title %}
 {% block content %}
+<style>
+  .line {
+    display: flex;
+    justify-content: space-between; /* 两端对齐 */
+    /* align-items: center; 垂直居中，可选 */
+  }
+
+  .text-limit {
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+  }
+</style>
+
 
 <div class="card w-75 mb-3 mx-auto mt-5">
     <div class="card-body">
@@ -14,8 +30,11 @@
         {% for article in articles %}
         <li class="list-group-item">
             <a href="{% url 'article:article_detail' article.uuid %}" class="text-decoration-none text-dark">
-                <p class="card-title">{{article.created}}</p>
-                <p class="card-title">{{article.title}}</p>
+              <div class="line">
+                <p class="left">{{article.created}}</p>
+                <p class="right text-limit">{{article.title}}</p>
+              </div>
+
                 <!-- <p class="card-text">{{article.description}}</p> -->
             </a>
         </li>

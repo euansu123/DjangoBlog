@@ -61,18 +61,18 @@
                         </div>
                       </div>
                 </div> -->
-
+                {% if toc %}
                 <div class="col-3 mt-4"> 
                     <div class="card border-0 bg-light"> 
                         <div class="card-body p-4">
-                            <h2 class="h5 mb-4">目录</h2>
+                            <!-- <h2 class="h5 mb-4">目录</h2> -->
                             <div class="toc-content"> 
                                 {{ toc|safe }} 
                             </div>
                         </div>
                     </div> 
                 </div>
-                
+                {% endif %}
                 <!-- <div class="col-3 mt-4">
                     <h4><strong>目录</strong></h4>
                     <hr>

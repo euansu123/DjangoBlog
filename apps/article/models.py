@@ -22,6 +22,8 @@ class Category(models.Model):
     icon = models.ImageField(upload_to='category/%Y%m%d/', blank=True)
     # 分组描述
     description = models.TextField(max_length=500, blank=True)
+    # 创建时间
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

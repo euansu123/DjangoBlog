@@ -151,11 +151,11 @@ def article_category(request):
     # 查询所有的分类
     category_query = Category.objects.all()
     # 转换所有的分类
-    category_list = [model_to_dict(category) for category in category_query]
+    # category_list = [model_to_dict(category) for category in category_query]
     # 可以指定要包含的字段
     # category_list = [model_to_dict(category, fields=['name', 'description']) for category in category_query]
-    context = {'categories': category_list}
-    
+    category_list = [{"id":category.id, "name":category.name, "icon":category.icon, "description":category.description, "count": ArticlePost.objects.filter(category=category).count()} for category in category_query]
+    context = {'categories': category_list * 10}
     return render(request, 'article/categories.html', context)
 
 
@@ -176,5 +176,4 @@ def article_category_detail(request, id):
         context["message"] = "要获取的专题不存在"
         return JsonResponse(context)
 
-    print(context)
     return render(request, 'article/category.html', context)
