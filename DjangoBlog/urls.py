@@ -18,16 +18,23 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from DjangoBlog.views import upload_view, browse_view
+from article.views import article_list
 
 urlpatterns = [
+    # 添加Home页面
+    path('', article_list, name='home'),
+    # 管理后台页面
     path('admin/', admin.site.urls),
     # 新增代码，配置app的url
     path('article/', include('article.urls', namespace='article')),
     # 新增代码，配置userprofile的url
     path('userprofile/', include('userprofile.urls', namespace='userprofile')),
     # 重置密码
-    # path('password/reset/', include('password_reset.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    # 上传图片和浏览图片
+    path('custom_upload/', upload_view, name='custom_upload'),
+    path("custom_browse/", browse_view, name="custom_browse"),
     
 ]
 

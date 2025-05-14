@@ -33,7 +33,7 @@ def article_list(request):
 
 
 def article_detail(request, id):
-    article = ArticlePost.objects.get(id=id)
+    article = ArticlePost.objects.get(uuid=id)
 
     # 将markdown语法渲染成html样式
     # article.body = markdown.markdown(article.body,
@@ -103,7 +103,7 @@ def article_delete(request, id):
     # return redirect("article:article_list")
     # 安全删除文章
     if request.method == 'POST':
-        article = ArticlePost.objects.get(id=id)
+        article = ArticlePost.objects.get(uuid=id)
         article.is_deleted = True
         article.save()
         return redirect("article:article_list")
@@ -113,7 +113,7 @@ def article_delete(request, id):
 # 文章更新
 def article_update(request, id):
     # 获取所需要具体修改的文章对象
-    article = ArticlePost.objects.get(id=id)
+    article = ArticlePost.objects.get(uuid=id)
     if request.method == 'POST':
         # 将提交的数据赋值到表单实例中
         article_post_form = ArticlePostForm(data=request.POST)

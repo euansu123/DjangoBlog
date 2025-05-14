@@ -40,11 +40,51 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # 指定 collectstatic 的�
 
 # CKEditor 上传配置（可选）
 CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': 'full',
+        # 'toolbar': 'full',
         'height': 300,
-        'width': '100%',
+        # 宽度
+        'width': 'auto',
+        # 工具栏风格
+        'toolbar': 'Custom',
+        #
+        'toolbar_Custom': [
+            # 表情 代码块
+            ['Smiley', 'CodeSnippet'],
+            # 字体风格
+            ['Bold', 'Italic', 'Underline', 'RemoveFormat', 'Blockquote'],
+            # 字体颜色
+            ['TextColor', 'BGColor'],
+            # 链接
+            ['Link', 'Unlink'],
+            # 列表
+            ['NumberedList', 'BulletedList'],
+            # 最大化
+            ['Maximize'],
+            # 源代码
+            ['Source'],
+            # 图片
+            ['Image'],
+            # 表格
+            ['Table'],
+            # 对齐方式
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            # 字体
+            ['Font', 'FontSize'],
+            # 撤销 重做
+            ['Undo', 'Redo'],
+            # 全屏
+            ['ShowBlocks'],
+            # 目录
+            ['Format'],
+        ],
+        # 代码块插件
+        'extraPlugins': ','.join(['codesnippet','image2','filebrowser','widget', 'lineutils', 'uploadimage']),
+        'filebrowserUploadUrl': '/custom_upload/',
+        'filebrowserBrowseUrl': '/custom_browse/',
     },
 }
 
@@ -139,9 +179,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 

@@ -10,11 +10,11 @@ urlpatterns = [
     # path函数将url映射到视图
     path('list/', views.article_list, name='article_list'),
     # 文章详情
-    path('detail/<int:id>/', views.article_detail, name='article_detail'),
+    path('detail/<uuid:id>/', views.article_detail, name='article_detail'),
     # 文章新建
     path('create/', views.article_create, name='article_create'),
     # 文章删除
-    path('delete/<int:id>/', views.article_delete, name='article_delete'),
+    path('delete/<uuid:id>/', views.article_delete, name='article_delete'),
     # 文章更新
-    path('update/<int:id>/', views.article_update, name='article_update'),
+    path('update/<uuid:id>/', views.article_update, name='article_update'),
 ]

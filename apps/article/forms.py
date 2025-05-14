@@ -12,7 +12,14 @@ class ArticlePostForm(forms.ModelForm):
         # 指明数据模型来源
         model = ArticlePost
         # 定义表单包含的字段
-        fields = ('title', 'body')
+        fields = ('title', 'category', 'body')
+
+        # 自定义字段的显示名称
+        labels = {
+            'title': '文章标题',
+            'category': '文章分组',
+            'body': '文章内容',
+        }
         
 
         widgets = {

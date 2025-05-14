@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 # 导入内建的User模型。
 from django.contrib.auth.models import User
@@ -11,9 +12,24 @@ from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 
 
+class Category(models.Model):
+    """
+    文章分组模型
+    """
+    # 分类名
+    name = models.CharField(max_length=100, unique=True)
+    # 分组图标
+    icon = models.ImageField(upload_to='category/%Y%m%d/', blank=True)
+    # 分组描述
+    description = models.TextField(max_length=500, blank=True)
+
+    def __str__(self):
+        return self.name
 
 # 博客文章数据模型
 class ArticlePost(models.Model):
+    # 主键设置
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # 文章作者。参数 on_delete 用于指定数据删除的方式
     # author = models.ForeignKey(User, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -24,7 +40,8 @@ class ArticlePost(models.Model):
     # 文章正文。保存大量文本使用 TextField
     # body = models.TextField()
     # 设置富文本
-    body = RichTextField()
+    # body = RichTextField()
+    body = RichTextUploadingField(verbose_name='文章内容', config_name='default')
     # 文章创建时间。参数 default=timezone.now 指定其在创建数据时将默认写入当前的时间
     created = models.DateTimeField(default=timezone.now)
 
@@ -33,6 +50,9 @@ class ArticlePost(models.Model):
 
     # 标记文章是否被删除
     is_deleted = models.BooleanField(default=False)
+
+    # 文章分组
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     
     # 内部类 class Meta 用于给 model 定义元数据
     class Meta:

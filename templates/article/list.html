@@ -19,8 +19,8 @@
                 <li class="list-group-item">
                     <div class="container text-center">
                         <div class="row">
-                            <!-- <p href="{% url 'article:article_detail' article.id %}" class="fs-2 font-monospace text-start fw-bold">{{ article.title }}</p> -->
-                            <a href="{% url 'article:article_detail' article.id %}"
+                            <!-- <p href="{% url 'article:article_detail' article.uuid %}" class="fs-2 font-monospace text-start fw-bold">{{ article.title }}</p> -->
+                            <a href="{% url 'article:article_detail' article.uuid %}"
                                 class="fs-3 font-monospace text-start fw-bold text-decoration-none text-dark">
                                 {{ article.title }}
                             </a>
@@ -31,7 +31,7 @@
                         </div>
                         <div class="row">
                             <div class="d-grid gap-2 col-2 ms-auto">
-                                <a href="{% url 'article:article_detail' article.id %}" class="btn btn-success">阅读本文</a>
+                                <a href="{% url 'article:article_detail' article.uuid %}" class="btn btn-success">阅读本文</a>
                                 <!-- <button class="btn btn-success" type="button">
                                     阅读原文
                                 </button> -->
