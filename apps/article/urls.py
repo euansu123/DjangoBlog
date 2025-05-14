@@ -17,4 +17,8 @@ urlpatterns = [
     path('delete/<uuid:id>/', views.article_delete, name='article_delete'),
     # 文章更新
     path('update/<uuid:id>/', views.article_update, name='article_update'),
+    # 文章专题
+    path('category/', views.article_category, name='article_category'),
+    # 专题详情
+    path('category/<int:id>/', views.article_category_detail, name='article_category_detail'),
 ]

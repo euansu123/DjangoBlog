@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}专题 | {{SITE_NAME}} {% endblock title %}
+{% block content %}
+
+<div class="card w-75 mb-3 mx-auto mt-5">
+    <div class="card-body">
+      <h5 class="card-title" style="text-align: center;color: #69CBF2;">{{category.name}}</h5>
+      <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+      <!-- <a href="#" class="btn btn-primary">Button</a> -->
+      <div class="border-bottom border-2 my-2"></div>
+      <ul class="list-group list-group-flush">
+        {% for article in articles %}
+        <li class="list-group-item">
+            <a href="{% url 'article:article_detail' article.uuid %}" class="text-decoration-none text-dark">
+                <p class="card-title">{{article.created}}</p>
+                <p class="card-title">{{article.title}}</p>
+                <!-- <p class="card-text">{{article.description}}</p> -->
+            </a>
+        </li>
+        {% endfor %}
+        <ul>
+    </div>
+  </div>
+{% endblock content %}

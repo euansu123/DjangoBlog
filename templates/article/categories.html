@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}专题 | {{SITE_NAME}} {% endblock title %}
+
+{% block content %}
+<!-- <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"> -->
+<div class="row ms-3 me-3" style="overflow: hidden;">
+    {% for category in categories %}
+    <div class="col-auto mb-4">
+      <a class="text-decoration-none text-reset" href="{% url 'article:article_category_detail' category.id %}">
+        <div class="card ms-3 mb-3" style="width: 18rem;overflow-x: hidden;">
+          <div class="card-image-wrapper ">
+            <img src="{{category.icon.url}}" class="card-img-top mt-3" alt="...">
+          </div>
+            <div class="card-body">
+              <h5 class="card-title">{{category.name}}</h5>
+              <p class="card-text" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;">{{category.description}}</p>
+              <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+            </div>
+          </div>
+      </a>
+    </div>
+    
+    
+    {% endfor %}
+</div>
+
+
+
+{% endblock content %}

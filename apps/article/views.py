@@ -1,11 +1,13 @@
 
+from unicodedata import category
+from django.template import context
 import markdown
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 # 导入数据模型ArticlePost
-from .models import ArticlePost
+# from .models import ArticlePost
 # 导入文章表单ArticlePostForm
-from .forms import ArticlePostForm
+from article.forms import ArticlePostForm
 # 导入django自带的用户模型User
 from django.contrib.auth.models import User
 # 
@@ -13,6 +15,9 @@ from userprofile.models import UserInfo
 # 导入django自带的分页模块
 from django.core.paginator import Paginator
 
+from article.models import ArticlePost, Category
+
+from django.forms.models import model_to_dict
 
 def article_list(request):
 
@@ -140,3 +145,36 @@ def article_update(request, id):
         context = { 'article': article, 'article_post_form': article_post_form }
         # 将响应返回到模板中
         return render(request, 'article/update.html', context)
+
+
+def article_category(request):
+    # 查询所有的分类
+    category_query = Category.objects.all()
+    # 转换所有的分类
+    category_list = [model_to_dict(category) for category in category_query]
+    # 可以指定要包含的字段
+    # category_list = [model_to_dict(category, fields=['name', 'description']) for category in category_query]
+    context = {'categories': category_list}
+    
+    return render(request, 'article/categories.html', context)
+
+
+def article_category_detail(request, id):
+    context = {"status": 0, "message": "success", "category": {}, "articles": []}
+    try:
+        category_obj = Category.objects.get(id=id)
+        context["category"] = model_to_dict(category_obj)
+        # 查询与专题关联的文章
+        article_query = ArticlePost.objects.filter(category=category_obj).order_by('-created')
+        # 对查询到的文章进行序列化处理
+        # model_to_dict 默认不会序列化主键字段
+        # article_list = [model_to_dict(article, fields=['uuid', 'title', 'created']) for article in article_query]
+        article_list = [{"uuid": article.uuid, "title":article.title, "created":article.created.strftime('%Y-%m-%d') } for article in article_query]
+        context["articles"] = article_list
+    except:
+        context["status"] = 1
+        context["message"] = "要获取的专题不存在"
+        return JsonResponse(context)
+
+    print(context)
+    return render(request, 'article/category.html', context)

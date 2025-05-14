@@ -1,19 +1,25 @@
 {% load static %}
-
-<header class="p-3 mb-3 border-bottom">
+<header class="p-3 mb-3 border-bottom header-fixed">
+<!-- <header class="p-3 mb-3 border-bottom"> -->
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"> 
-      <a href="/article/list/"
+      <a href="/"
         class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none"> 
         <img src="{% static 'images/logo.png' %}" width="40" height="40" alt="Logo" class="bi me-2">
       </a>
+
+      <!-- 导航栏左侧：标题 -->
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="/article/list/" class="nav-link px-2 link-secondary">南歌EuanSu的个人网站</a></li>
-        <!-- <li><a href="#" class="nav-link px-2 link-body-emphasis">Inventory</a></li>
-        <li><a href="#" class="nav-link px-2 link-body-emphasis">Customers</a></li>
-        <li><a href="#" class="nav-link px-2 link-body-emphasis">Products</a></li> -->
+        <li><a href="/" class="nav-link px-2 link-secondary">{{ SITE_NAME }}</a></li>
       </ul>
 
+      <!-- 导航栏右侧：菜单 -->
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="/article/category/" class="nav-link px-2 link-body-emphasis">专题</a></li>
+        <li><a href="#" class="nav-link px-2 link-body-emphasis">标签</a></li>
+        <li><a href="#" class="nav-link px-2 link-body-emphasis">归档</a></li>
+      </ul>
+      
       <!-- 搜索框 -->
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search"> 
         <input type="search" class="form-control"
