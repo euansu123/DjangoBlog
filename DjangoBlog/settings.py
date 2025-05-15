@@ -94,6 +94,8 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',  # 必需依赖
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
