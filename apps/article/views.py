@@ -139,10 +139,11 @@ def article_update(request, id):
             # 将响应返回到模板中
             return render(request, 'article/update.html', context)
     else:
-        # 创建表单类实例
-        article_post_form = ArticlePostForm()
+        # 创建表单类实例，使用 instance 参数初始化表单，填充已有的数据
+        article_post_form = ArticlePostForm(instance=article)
         # 赋值上下文，将 article 文章对象也传递进去，以便提取旧的内容
         context = { 'article': article, 'article_post_form': article_post_form }
+        print(context)
         # 将响应返回到模板中
         return render(request, 'article/update.html', context)
 
