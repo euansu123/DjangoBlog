@@ -21,4 +21,8 @@ urlpatterns = [
     path('category/', views.article_category, name='article_category'),
     # 专题详情
     path('category/<int:id>/', views.article_category_detail, name='article_category_detail'),
+    # 文章标签
+    path('tags/', views.article_tags, name='article_tags'),
+    # 选中标签
+    path('tag/<int:id>/', views.article_tag_detail, name='article_tag_detail'),
 ]

@@ -10,6 +10,7 @@ from django.conf import settings
 from ckeditor.fields import RichTextField
 # 上传功能
 from ckeditor_uploader.fields import RichTextUploadingField
+from pip._vendor.rich.markup import Tag
 
 
 class Category(models.Model):
@@ -24,6 +25,12 @@ class Category(models.Model):
     description = models.TextField(max_length=500, blank=True)
     # 创建时间
     created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+class ArticleTag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
@@ -55,14 +62,25 @@ class ArticlePost(models.Model):
 
     # 文章分组
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    # 文章标签（一个文章可以存在多个标签）
+    tag = models.ManyToManyField(ArticleTag, blank=True)
     
     # 内部类 class Meta 用于给 model 定义元数据
     class Meta:
-    	# ordering 指定模型返回的数据的排列顺序
-    	# '-created' 表明数据应该以倒序排列
         ordering = ('-created',)
+        # ordering 指定模型返回的数据的排列顺序
+        # '-created' 表明数据应该以倒序排列
+
+    def _create(self):
+        """创建文章的方法，关联分类和标签"""
+
+
 
     # 函数 __str__ 定义当调用对象的 str() 方法时的返回值内容
     def __str__(self):
-    	# return self.title 将文章标题返回
         return self.title
+        # return self.title 将文章标题返回
+
+
+

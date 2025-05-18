@@ -15,7 +15,7 @@ from userprofile.models import UserInfo
 # 导入django自带的分页模块
 from django.core.paginator import Paginator
 
-from article.models import ArticlePost, Category
+from article.models import ArticlePost, Category, ArticleTag
 
 from django.forms.models import model_to_dict
 
@@ -60,8 +60,12 @@ def article_detail(request, id):
         ]
     )
     article.body = md.convert(article.body)
-
+    # 标签颜色
+    tag_color = ["bg-blue", "bg-green", "bg-purple", "bg-pink", "bg-teal", "bg-gold", "bg-brown"]
+    # 标签为一对多关系，需要获取对应的名称
+    article.tags = [{"name": tag.name, "color":tag_color[index % len(tag_color)]} for index, tag in enumerate(article.tag.all())]
     context = { 'article': article, 'toc':md.toc }
+    print(md.toc)
     return render(request, 'article/detail.html', context)
 
 
@@ -178,3 +182,53 @@ def article_category_detail(request, id):
         return JsonResponse(context)
 
     return render(request, 'article/category.html', context)
+
+
+def article_tags(request):
+    # 查询所有的文章标签
+    tagQuery = ArticleTag.objects.all()
+    # 标签颜色
+    tag_color = ["bg-blue", "bg-green", "bg-purple", "bg-pink", "bg-teal", "bg-gold", "bg-brown"]
+    # 转换所有的标签，这里需要特殊处理
+    tag_list = [
+        {
+            "id":tag.id,
+            "name":tag.name, 
+            "count":tag.articlepost_set.count(), 
+            "color": tag_color[index % len(tag_color)]
+            } for index,tag in enumerate(tagQuery)]
+    # 返回上下文
+    context = {'tags': tag_list * 30}
+    return render(request, 'article/tags.html', context)
+
+def article_tag_detail(request, id):
+    """选中文章标签"""
+    context = {"status": 0, "message": "success"}
+    # 查询所有的文章标签
+    tagQuery = ArticleTag.objects.all()
+    # 标签颜色
+    tag_color = ["bg-blue", "bg-green", "bg-purple", "bg-pink", "bg-teal", "bg-gold", "bg-brown"]
+    # 转换所有的标签，这里需要特殊处理
+    tag_list = [
+        {
+            "id":tag.id,
+            "name":tag.name, 
+            "count":tag.articlepost_set.count(), 
+            "color": tag_color[index % len(tag_color)]
+            } for index,tag in enumerate(tagQuery)]
+    # 返回上下文
+    context = {'tags': tag_list * 30}
+    try:
+        # 获取标签对象
+        tag_obj = ArticleTag.objects.get(id=id)
+        # 获取与标签关联的文章对象
+        article_query = ArticlePost.objects.filter(tag=tag_obj).order_by('-created')
+        # 对查询到的文章进行序列化处理
+        articles_list = [{"uuid":article.uuid, "title":article.title, "created":article.created.strftime('%Y-%m-%d')} for article in article_query]
+        context["articles"] = articles_list
+        context["choose"] = tag_obj.name
+    except:
+        context["status"] = 1
+        context["message"] = "要获取的标签不存在"
+
+    return render(request, 'article/tags.html', context)

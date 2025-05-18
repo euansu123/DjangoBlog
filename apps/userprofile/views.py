@@ -54,6 +54,7 @@ def user_register(request):
             # 保存好数据跳转至登录页
             return redirect("userprofile:login")
         else:
+            print(user_register_form.errors)
             user_register_form = UserRegisterForm()
             context = { 'form': user_register_form , 'msg':"请按照格式填写用户注册表单~"}
             return render(request, 'userprofile/register.html', context)
