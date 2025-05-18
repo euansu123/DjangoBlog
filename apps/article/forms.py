@@ -24,8 +24,11 @@ class ArticlePostForm(forms.ModelForm):
         }
         
 
+        # widgets = {
+        #     'body': CKEditorWidget(),  # 用 CKEditor 替代原 textarea
+        # }
         widgets = {
-            'body': CKEditorWidget(),  # 用 CKEditor 替代原 textarea
+            'body': forms.Textarea(attrs={'id': 'id_content'}),
         }
 
 

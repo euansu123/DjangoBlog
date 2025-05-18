@@ -109,6 +109,9 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
 ]
 
+# 允许同源iframe加载
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

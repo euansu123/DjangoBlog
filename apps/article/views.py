@@ -1,9 +1,9 @@
-
-from unicodedata import category
-from django.template import context
+import os
 import markdown
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
+from django.conf import settings
+from datetime import datetime
 # 导入数据模型ArticlePost
 # from .models import ArticlePost
 # 导入文章表单ArticlePostForm
@@ -18,6 +18,7 @@ from django.core.paginator import Paginator
 from article.models import ArticlePost, Category, ArticleTag
 
 from django.forms.models import model_to_dict
+from django.views.decorators.csrf import csrf_exempt
 
 def article_list(request):
 
@@ -63,9 +64,8 @@ def article_detail(request, id):
     # 标签颜色
     tag_color = ["bg-blue", "bg-green", "bg-purple", "bg-pink", "bg-teal", "bg-gold", "bg-brown"]
     # 标签为一对多关系，需要获取对应的名称
-    article.tags = [{"name": tag.name, "color":tag_color[index % len(tag_color)]} for index, tag in enumerate(article.tag.all())]
+    article.tags = [{"id":tag.id, "name": tag.name, "color":tag_color[index % len(tag_color)]} for index, tag in enumerate(article.tag.all())]
     context = { 'article': article, 'toc':md.toc }
-    print(md.toc)
     return render(request, 'article/detail.html', context)
 
 
@@ -83,22 +83,32 @@ def article_create(request):
             new_article.author = UserInfo.objects.get(id=1)
             # 将新文章保存到数据库中
             new_article.save()
+            # 保存标签关系
+            article_post_form.save_m2m()
             # 完成后返回到文章列表
             return redirect("article:article_list")
         # 如果数据不合法，返回错误信息
         else:
             # 创建表单类实例
             article_post_form = ArticlePostForm()
+            # 标签
+            tags = [{"id":tag.id, "name":tag.name} for tag in ArticleTag.objects.all()]
+            # 分组
+            categories = [{"id":category.id, "name":category.name} for category in Category.objects.all()]
             # 赋值上下文
-            context = { 'article_post_form': article_post_form , 'msg':'表单填写有误，请重新填写后提交。'}
+            context = { 'article_post_form': article_post_form , 'msg':'表单填写有误，请重新填写后提交。', 'tags':tags, 'categories':categories}
             # 返回模板
             return render(request, 'article/create.html', context)
     # 如果用户请求获取数据
     else:
         # 创建表单类实例
         article_post_form = ArticlePostForm()
+        # 标签
+        tags = [{"id":tag.id, "name":tag.name} for tag in ArticleTag.objects.all()]
+        # 分组
+        categories = [{"id":category.id, "name":category.name} for category in Category.objects.all()]
         # 赋值上下文
-        context = { 'article_post_form': article_post_form }
+        context = { 'article_post_form': article_post_form , 'msg':'表单填写有误，请重新填写后提交。', 'tags':tags, 'categories':categories}
         # 返回模板
         return render(request, 'article/create.html', context)
     
@@ -232,3 +242,29 @@ def article_tag_detail(request, id):
         context["message"] = "要获取的标签不存在"
 
     return render(request, 'article/tags.html', context)
+
+
+@csrf_exempt
+def upload_image(request):
+    if request.method == 'POST' and request.FILES.get("editormd-image-file"):
+        f = request.FILES["editormd-image-file"]
+        today = datetime.now().strftime('%Y%m%d')
+        path = os.path.join("uploads", "article", today, f.name)
+        full_path = os.path.join(settings.MEDIA_ROOT, path)
+        os.makedirs(os.path.dirname(full_path), exist_ok=True)
+
+        with open(full_path, 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
+
+        response = JsonResponse({
+            "success": 1,
+            "message": "上传成功",
+            "url": settings.MEDIA_URL + path
+        })
+        # 添加跨域响应头
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Headers"] = "*"
+        return response
+
+    return JsonResponse({"success": 0, "message": "上传失败"})

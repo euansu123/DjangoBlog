@@ -12,7 +12,6 @@ from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from pip._vendor.rich.markup import Tag
 
-
 class Category(models.Model):
     """
     文章分组模型
@@ -50,7 +49,8 @@ class ArticlePost(models.Model):
     # body = models.TextField()
     # 设置富文本
     # body = RichTextField()
-    body = RichTextUploadingField(verbose_name='文章内容', config_name='default')
+    # body = RichTextUploadingField(verbose_name='文章内容', config_name='default')
+    body = models.TextField()  # 保存 Markdown 文本
     # 文章创建时间。参数 default=timezone.now 指定其在创建数据时将默认写入当前的时间
     created = models.DateTimeField(default=timezone.now)
 

@@ -8,16 +8,62 @@
 {% endblock extra_head %}
 
 {% block content %}
+<head>
+     <link rel="stylesheet" href="{% static 'editor.md/css/editormd.min.css' %}" />
+</head>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
             <form method="post" action="." class="my-4">
                 {% csrf_token %}
-                {{ article_post_form.media }}
+                <!-- {{ article_post_form.media }}
                 {{ article_post_form.as_p }}
-                <button type="submit" class="btn btn-primary">文章发表</button>
+                <button type="submit" class="btn btn-primary">文章发表</button> -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">文章标题</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="请输入标题">
+                  </div>
+                  <div class="mb-3">
+                    <label for="category" class="form-label">文章分类</label>
+                    <select class="form-select" id="category" name="category">
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="tag" class="form-label">文章标签</label>
+                    <select multiple class="form-select" id="tag" name="tag">
+                      {% for tag in tags %}
+                            <option value="{{ tag.id }}">{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-text text-muted">按住 Ctrl (Windows) 或 ⌘ (Mac) 选择多个标签</small>
+                  </div>
+
+                <div id="editor">
+                    <textarea name="body" id="id_content" style="display:none;">{{ form.content.value }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">提交</button>
             </form>
         </div>
     </div>
 </div>
+<!-- 这里一定要引用jquery，否则可能会导致无法加载编辑器 -->
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'editor.md/editormd.min.js' %}"></script>
+
+    <script>
+        var editor = editormd("editor", {
+            width: "100%",
+            height: 500,
+            path: "{% static 'editor.md/lib/' %}",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "png", "gif", "bmp", "webp"],
+            imageUploadURL: "{% url 'article:upload_image' %}", 
+            crossDomainUpload: false,  // 设置为false，因为我们在同一域名下
+            ploadCallbackURL: "",     // 不需要回调URL
+        });
+    </script>
 {% endblock content %}
