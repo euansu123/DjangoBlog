@@ -15,7 +15,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: right;
+    text-align: left;
   }
 </style>
 
@@ -31,8 +31,9 @@
         <li class="list-group-item">
             <a href="{% url 'article:article_detail' article.uuid %}" class="text-decoration-none text-dark">
               <div class="line">
-                <p class="left">{{article.created}}</p>
-                <p class="right text-limit">{{article.title}}</p>
+                <p class="left text-limit">{{article.title}}</p>
+                <p class="right">{{article.created}}</p>
+                
               </div>
 
                 <!-- <p class="card-text">{{article.description}}</p> -->

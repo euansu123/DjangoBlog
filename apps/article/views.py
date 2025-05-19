@@ -232,7 +232,7 @@ def article_tag_detail(request, id):
         # 获取标签对象
         tag_obj = ArticleTag.objects.get(id=id)
         # 获取与标签关联的文章对象
-        article_query = ArticlePost.objects.filter(tag=tag_obj).order_by('-created')
+        article_query = ArticlePost.objects.filter(tag=tag_obj, is_deleted=False).order_by('-created')
         # 对查询到的文章进行序列化处理
         articles_list = [{"uuid":article.uuid, "title":article.title, "created":article.created.strftime('%Y-%m-%d')} for article in article_query]
         context["articles"] = articles_list
@@ -243,7 +243,7 @@ def article_tag_detail(request, id):
 
     return render(request, 'article/tags.html', context)
 
-
+# makrdown上传图片
 @csrf_exempt
 def upload_image(request):
     if request.method == 'POST' and request.FILES.get("editormd-image-file"):
@@ -268,3 +268,33 @@ def upload_image(request):
         return response
 
     return JsonResponse({"success": 0, "message": "上传失败"})
+
+from django.db.models.functions import TruncYear, TruncMonth
+from django.db.models import Count
+
+def article_archives(request):
+    # 查询所有的文章，按照年份进行分组，统计每个年份的文章数量
+    # articles_by_year = ArticlePost.objects.filter(is_deleted=False)\
+    #     .annotate(year=TruncYear('created'))\
+    #         .values('year')\
+    #             .annotate(count=Count('uuid'))\
+    #                 .order_by('-year')    
+    # 按照年份聚合文章
+    articles_by_year = ArticlePost.objects.filter(is_deleted=False)\
+        .annotate(year=TruncYear('created'))\
+            .values('year', 'title', 'uuid', 'created')\
+                .order_by('-year', '-created')
+    
+    archives = {}
+    date_group = []
+    for article in articles_by_year:
+        year = article['year'].year
+        if year not in archives:
+            date_group.append(year)
+            archives[year] = []
+        archives[year].append({"uuid":article['uuid'], "title":article['title'], "created":article['created'].strftime('%Y-%m-%d')})
+        # archives[year]["count"] += 1
+
+    context = {"archives":archives, "dateGroup": date_group}
+
+    return render(request, 'article/archives.html', context)
