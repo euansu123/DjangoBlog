@@ -170,7 +170,7 @@ def article_category(request):
     # 可以指定要包含的字段
     # category_list = [model_to_dict(category, fields=['name', 'description']) for category in category_query]
     category_list = [{"id":category.id, "name":category.name, "icon":category.icon, "description":category.description, "count": ArticlePost.objects.filter(category=category).count()} for category in category_query]
-    context = {'categories': category_list * 10}
+    context = {'categories': category_list }
     return render(request, 'article/categories.html', context)
 
 
@@ -208,7 +208,7 @@ def article_tags(request):
             "color": tag_color[index % len(tag_color)]
             } for index,tag in enumerate(tagQuery)]
     # 返回上下文
-    context = {'tags': tag_list * 30}
+    context = {'tags': tag_list }
     return render(request, 'article/tags.html', context)
 
 def article_tag_detail(request, id):
@@ -227,7 +227,7 @@ def article_tag_detail(request, id):
             "color": tag_color[index % len(tag_color)]
             } for index,tag in enumerate(tagQuery)]
     # 返回上下文
-    context = {'tags': tag_list * 30}
+    context = {'tags': tag_list }
     try:
         # 获取标签对象
         tag_obj = ArticleTag.objects.get(id=id)

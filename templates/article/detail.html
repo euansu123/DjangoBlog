@@ -64,15 +64,16 @@
     </div>
     <div class="col-3">
       {% if toc %}
-          文章目录
-          <div class="card border-0 bg-light"> 
+      <div class="toc-wrapper" style="position: sticky; top: 2rem;">
+        <h5 class="mb-3" style="text-align: center;">文章目录</h5>
+        <div class="card border-0"> 
             <div class="card-body p-4">
-                <!-- <h2 class="h5 mb-4">目录</h2> -->
                 <div class="toc-content"> 
                     {{ toc|safe }} 
                 </div>
             </div>
-        </div> 
+        </div>
+    </div>
         <!-- <div class="col-3 mt-4"> 
             
         </div> -->
@@ -82,6 +83,28 @@
 </div>
 
 <style>
+/* 目录容器样式 */
+.toc-wrapper {
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+}
+
+/* 自定义滚动条样式 */
+.toc-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+
+.toc-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.toc-wrapper::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+}
+
 .article-content {
     width: 100%;
     overflow-x: hidden;
@@ -135,6 +158,37 @@
 .bg-brown { background-color: #8e5a2b; }
 
 /* 文章目录样式 */
+.toc-content {
+    font-size: 0.9rem;
+}
+
+.toc-content ul {
+    list-style: none;
+    padding-left: 1rem;
+}
+
+.toc-content > ul {
+    padding-left: 0;
+}
+
+.toc-content a {
+    color: #666;
+    text-decoration: none;
+    display: block;
+    padding: 4px 0;
+    transition: all 0.2s;
+}
+
+.toc-content a:hover {
+    color: #007bff;
+    padding-left: 5px;
+}
+
+/* 不同级别标题的缩进 */
+.toc-content ul ul { padding-left: 1.2rem; }
+.toc-content ul ul ul { padding-left: 2.4rem; }
+.toc-content ul ul ul ul { padding-left: 3.6rem; }
+
 .card-body ul {
     list-style: none;
     padding-left: 1rem;
@@ -155,6 +209,13 @@
 /* 多级目录缩进 */
 .card-body ul ul {
     padding-left: 1.2rem;
+}
+
+.card-shadow{
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.card-shadow:hover{
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 </style>
 

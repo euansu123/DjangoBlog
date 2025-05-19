@@ -1,4 +1,5 @@
 {% load static %}
+{% load userprofile_extras %}
 <header class="p-3 mb-3 border-bottom header-fixed">
 <!-- <header class="p-3 mb-3 border-bottom"> -->
   <div class="container">
@@ -36,11 +37,13 @@
         {% if user.avatar %}
           <img src="{{ user.avatar.url }}" alt="{{ user.username }}" width="32" height="32" class="rounded-circle">
         {% else %}
-          <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle"> 
+          <img src="{% static 'images/avatar.jpg' %}" alt="mdo" width="32" height="32" class="rounded-circle"> 
         {% endif %}
         </a>
-        <ul class="dropdown-menu text-small" style="">
+        <ul class="dropdown-menu text-small">
+          {% if user.is_superuser %}
           <li><a class="dropdown-item" href="{% url 'article:article_create' %}">新增文章</a></li>
+          {% endif %}
           <li><a class="dropdown-item" href="{% url "userprofile:detail" user.id %}">信息查看</a></li>
           <li><a class="dropdown-item" href="{% url "userprofile:edit" user.id %}">信息修改</a></li>
           <li>

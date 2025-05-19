@@ -61,6 +61,7 @@
 
 
             <!-- 分页器 -->
+            {% if articles %}
             <div class="card">
                 <nav aria-label="Page navigation" class="mt-3">
                     <ul class="pagination justify-content-center">
@@ -109,18 +110,11 @@
                     </ul>
                 </nav>
             </div>
-            
+            {% endif %}
         </div>
         <div class="col-4 my-4">
             <div class="card card-shadow ms-4 my-2 col-8">
-                <div class="self-avatar mt-4">
-                    {% if user.is_authenticated %}
-                    <img src="{{ user.avatar.url }}" alt="Circular Image" class="fixed-size" style="width: 140px;height: 140px;">
-                    {% else %}
-                    <img src="/media/avatar.jpg" alt="Circular Image" class="fixed-size" style="width: 100px;height: 100px;">
-                    {% endif %}
-                </div>
-1
+                
             </div>
             <!-- 头像及博客简介 -->
              <!-- <div style="margin-top: 50px;">
