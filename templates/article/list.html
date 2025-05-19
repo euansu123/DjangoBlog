@@ -114,7 +114,23 @@
         </div>
         <div class="col-4 my-4">
             <div class="card card-shadow ms-4 my-2 col-8">
-                
+                <div class="blog-info my-3">
+                    <div class="col-4">
+                        <a href="/article/archives/" class="nav-link px-2 link-secondary"><span class="badge text-bg-secondary">{{article_count}}</span><br></a>
+                        文章 
+                    </div>
+                    <div class="col-4">
+                        <a href="/article/category/" class="nav-link px-2 link-secondary">
+                            <span class="badge text-bg-secondary">{{category_count}}</span><br>
+                        </a>
+                        专题
+                    </div>
+                    <div class="col-4">
+                        <a href="/article/tags/" class="nav-link px-2 link-secondary"><span class="badge text-bg-secondary">{{tag_count}}</span><br></a>
+                        标签
+                    </div>
+                </div>
+
             </div>
             <!-- 头像及博客简介 -->
              <!-- <div style="margin-top: 50px;">
@@ -218,6 +234,10 @@
     background-color: #6c757d;
     color: white;
 }
+.blog-info{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 </style>
-
 {% endblock content %}

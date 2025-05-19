@@ -31,7 +31,13 @@ def article_list(request):
     # 将导航对象相应的页码内容返回给 articles
     articles = paginator.get_page(page)
     # paginator.page_range 页码列表
-    context = { 'articles': articles ,'page_list':paginator.page_range}
+
+    # 获取文章、标签、专题的总数，做返回
+    article_count = len(articles)
+    tag_count = ArticleTag.objects.all().count()
+    category_count = Category.objects.all().count()
+
+    context = { 'articles': articles ,'page_list':paginator.page_range, 'article_count':article_count, 'tag_count':tag_count, 'category_count':category_count}
     # 需要传递给模板（templates）的对象
     # context = { 'articles': articles }
     # render函数：载入模板，并返回context对象
