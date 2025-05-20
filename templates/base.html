@@ -21,6 +21,16 @@
     <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
     <!-- 网站favicon -->
     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'editor.md/css/editormd.preview.min.css' %}" />
+    <script src="{% static 'editor.md/lib/marked.min.js' %}"></script>
+    <script src="{% static 'editor.md/lib/prettify.min.js' %}"></script>
+    <script src="{% static 'editor.md/lib/raphael.min.js' %}"></script>
+    <script src="{% static 'editor.md/lib/underscore.min.js' %}"></script>
+    <script src="{% static 'editor.md/lib/sequence-diagram.min.js' %}"></script>
+    <script src="{% static 'editor.md/lib/flowchart.min.js' %}"></script>
+    <script src="{% static 'editor.md/lib/jquery.flowchart.min.js' %}"></script>
+    <script src="{% static 'editor.md/editormd.min.js' %}"></script>
 
 </head>
 
@@ -35,7 +45,6 @@
     {% include 'footer.html' %}
     <!-- bootstrap.js 依赖 jquery.js 和popper.js，因此在这里引入 -->
     <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> -->
-    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
     
     <!-- 引入popper的js文件 -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1-lts/dist/umd/popper.min.js"></script> -->

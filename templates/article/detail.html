@@ -58,8 +58,10 @@
         <div class="border-bottom border-1 my-2"></div>
 
         <div class="article-content">
-          {{ article.body|safe }}
-        </div>
+          <div id="content">
+              <textarea style="display:none;">{{ article.body }}</textarea>
+          </div>
+      </div>
       
     </div>
     <div class="col-3">
@@ -217,9 +219,40 @@
 .card-shadow:hover{
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
+.article-content p:empty {
+    display: none;
+    margin: 0;
+}
+.article-content br {
+    display: none;  /* 完全隐藏换行 */
+    /* 或者 */
+    margin-bottom: 0.5em;  /* 设置较小的间距 */
+}
+.editormd-html-preview {
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+.editormd-html-preview pre {
+    background-color: #f8f9fa;
+    border-radius: 3px;
+    padding: 16px;
+}
+
+[data-bs-theme="dark"] .editormd-html-preview {
+    background: #2b3035;
+    color: #dee2e6;
+}
+
+[data-bs-theme="dark"] .editormd-html-preview pre {
+    background-color: #212529;
+}
 </style>
 
-<script>
+<script type="text/javascript">
     // sweetalert2组件库
     function confirm_delete() {
         Swal.fire({
@@ -240,6 +273,28 @@
     }
     // 文章标签样式
     const colorPalette = ['bg-primary', 'bg-success', 'bg-danger', 'bg-warning', 'bg-info', 'bg-dark', 'bg-secondary'];
+    $(function() {
+        var testEditormdView;
+        testEditormdView = editormd.markdownToHTML("content", {
+            markdown: $("#content").children("textarea").val(),
+            htmlDecode: "style,script,iframe",  // 开启HTML标签解析
+            tocm: true,         // 开启下拉目录
+            emoji: true,        // 开启emoji表情
+            taskList: true,     // 开启任务列表
+            tex: true,          // 开启科学公式
+            flowChart: true,    // 开启流程图
+            sequenceDiagram: true, // 开启时序图
+            codeFold: true,     // 代码折叠
+            // 配置主题
+            theme: "default",
+            previewTheme: "default",
+            editorTheme: "default",
+            // 代码高亮主题
+            codeTheme: "default",
+            // 自定义样式
+            path: "{% static 'editor.md/lib/' %}",
+        });
+    });
 </script>
 
 {% endblock content %}

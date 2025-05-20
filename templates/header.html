@@ -1,63 +1,124 @@
 {% load static %}
 <header class="p-3 mb-3 border-bottom header-fixed">
-<!-- <header class="p-3 mb-3 border-bottom"> -->
   <div class="container">
-    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"> 
-      <a href="/"
-        class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none"> 
-        <img src="{% static 'images/logo.png' %}" width="40" height="40" alt="Logo" class="bi me-2">
-      </a>
-
-      <!-- 导航栏左侧：标题 -->
-      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="/" class="nav-link px-2 link-secondary">{{ SITE_NAME }}</a></li>
-      </ul>
-
-      <!-- 导航栏右侧：菜单 -->
-      <ul class="nav me-3">
-        <li><a href="/" class="nav-link px-2 link-secondary">首页</a></li>
-        <li><a href="/article/category/" class="nav-link px-2 link-secondary">专题</a></li>
-        <li><a href="/article/tags/" class="nav-link px-2 link-secondary">标签</a></li>
-        <li><a href="/article/archives/" class="nav-link px-2 link-secondary">归档</a></li>
-        <!-- <li><a href="#" class="nav-link px-2 link-secondary">在线工具</a></li> -->
-    </ul>
-      
-      <!-- 搜索框 -->
-      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search"> 
-        <input type="search" class="form-control"
-          placeholder="Search..." aria-label="Search"> 
-      </form>
-      <!-- Django的 if 模板语句 -->
-      {% if user.is_authenticated %}
-      <!-- 如果用户已经登录，则显示用户名下拉框 -->
-      <div class="dropdown text-end"> <a href="#"
-        class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
-        aria-expanded="false"> 
-        {% if user.avatar %}
-          <img src="{{ user.avatar.url }}" alt="{{ user.username }}" width="32" height="32" class="rounded-circle">
-        {% else %}
-          <img src="{% static 'images/avatar.jpg' %}" alt="mdo" width="32" height="32" class="rounded-circle"> 
-        {% endif %}
+    <div class="d-flex flex-wrap align-items-center justify-content-between"> 
+      <!-- 网站Logo和名称 -->
+      <div class="d-flex align-items-center">
+        <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none"> 
+          <img src="{% static 'images/logo.png' %}" width="40" height="40" alt="Logo" class="bi me-2">
         </a>
-        <ul class="dropdown-menu text-small">
-          {% if user.is_superuser %}
-          <li><a class="dropdown-item" href="{% url 'article:article_create' %}">新增文章</a></li>
-          {% endif %}
-          <li><a class="dropdown-item" href="{% url "userprofile:detail" user.id %}">信息查看</a></li>
-          <li><a class="dropdown-item" href="{% url "userprofile:edit" user.id %}">信息修改</a></li>
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-          <li><a class="dropdown-item" href="{% url "userprofile:logout" %}">注销登录</a></li>
-        </ul>
+        <!-- 在移动端只显示网站名称 -->
+        <span class="d-md-block">{{ SITE_NAME }}</span>
       </div>
-      <!-- 如果用户未登录，则显示 “登录” -->
-      {% else %}
-      <!-- <button type="button" class="btn btn-outline-primary me-2" href="{% url 'userprofile:login' %}">Login</button> -->
-      <a href="{% url 'userprofile:login' %}" class="nav-link me-2 link-secondary">登录</a>
-      <a href="{% url 'userprofile:register' %}" class="nav-link me-2 link-secondary">注册</a>
-      <!-- if 语句在这里结束 -->
-      {% endif %}
+
+      <!-- 导航菜单 -->
+      <div class="d-flex align-items-center">
+        <!-- 在大屏幕显示完整菜单 -->
+        <div class="d-none d-lg-flex">
+          <ul class="nav me-3">
+            <li><a href="/" class="nav-link px-2 link-secondary">首页</a></li>
+            <li><a href="/article/category/" class="nav-link px-2 link-secondary">专题</a></li>
+            <li><a href="/article/tags/" class="nav-link px-2 link-secondary">标签</a></li>
+            <li><a href="/article/archives/" class="nav-link px-2 link-secondary">归档</a></li>
+            <li><a href="#" class="nav-link px-2 link-secondary">在线工具</a></li>
+          </ul>
+          
+          <!-- 搜索框 -->
+          <form class="me-3" role="search"> 
+            <input type="search" class="form-control" placeholder="Search..." aria-label="Search"> 
+          </form>
+        </div>
+
+        <!-- 移动端的折叠菜单按钮 -->
+        <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvas">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- 用户头像/登录按钮 -->
+        {% if user.is_authenticated %}
+        <div class="dropdown text-end"> 
+          <a href="#"
+            class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+            aria-expanded="false"> 
+          {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="{{ user.username }}" width="32" height="32" class="rounded-circle">
+          {% else %}
+            <img src="{% static 'images/avatar.jpg' %}" alt="mdo" width="32" height="32" class="rounded-circle"> 
+          {% endif %}
+          </a>
+          <ul class="dropdown-menu text-small">
+            {% if user.is_superuser %}
+            <li><a class="dropdown-item" href="{% url 'article:article_create' %}">新增文章</a></li>
+            {% endif %}
+            <li><a class="dropdown-item" href="{% url "userprofile:detail" user.id %}">信息查看</a></li>
+            <li><a class="dropdown-item" href="{% url "userprofile:edit" user.id %}">信息修改</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{% url "userprofile:logout" %}">注销登录</a></li>
+          </ul>
+        </div>
+        {% else %}
+        <div class="d-none d-lg-block loginInfo d-flex align-items-center gap-2">
+          <a href="{% url 'userprofile:login' %}" class="nav-link link-secondary">登录</a>
+          <a href="{% url 'userprofile:register' %}" class="nav-link link-secondary">注册</a>
+        </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </header>
+
+<!-- 移动端的侧边栏菜单 -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="navbarOffcanvas">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">菜单</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <!-- 移动端搜索框 -->
+    <form class="mb-3" role="search">
+      <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+    </form>
+    
+    <!-- 移动端导航菜单 -->
+    <ul class="nav flex-column">
+      <li><a href="/" class="nav-link link-secondary">首页</a></li>
+      <li><a href="/article/category/" class="nav-link link-secondary">专题</a></li>
+      <li><a href="/article/tags/" class="nav-link link-secondary">标签</a></li>
+      <li><a href="/article/archives/" class="nav-link link-secondary">归档</a></li>
+      <li><a href="#" class="nav-link link-secondary">在线工具</a></li>
+      {% if not user.is_authenticated %}
+      <li><hr class="dropdown-divider"></li>
+      <li><a href="{% url 'userprofile:login' %}" class="nav-link link-secondary">登录</a></li>
+      <li><a href="{% url 'userprofile:register' %}" class="nav-link link-secondary">注册</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+
+<style>
+/* 移动端样式优化 */
+@media (max-width: 992px) {
+  .navbar-toggler {
+    border: none;
+    padding: 0;
+  }
+  
+  .navbar-toggler-icon {
+    width: 1.5em;
+    height: 1.5em;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
+
+  [data-bs-theme="dark"] .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
+}
+
+@media (min-width: 992px) {
+  .d-lg-block {
+    display: flex !important;
+  }
+}
+</style>
