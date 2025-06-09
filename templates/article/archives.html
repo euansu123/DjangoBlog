@@ -1,0 +1,66 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load static %}
+{% load article_extras %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+归档 | {{SITE_NAME}}
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+{{date_group}}
+<div class="row mx-auto d-flex my-5 justify-content-center" style="overflow: hidden;">
+    {% for date in dateGroup %}
+    <div class="card col-8 my-3 card-shadow">
+        <div class="card-header">
+            <span class="crad-title">{{date}}</span>
+        </div>
+        {% for article in archives|get_item:date %}
+            <a href="{% url 'article:article_detail' article.uuid %}" class="text-decoration-none text-dark">
+                <div class="mx-2 my-2 articles">
+                    <span class="text-limit">{{article.title}}</span>
+                    <span>{{article.created}}</span>
+                </div>
+              </a>
+            {% endfor %}
+    </div>
+    {% endfor %}
+    
+</div>
+
+
+<style>
+/* 卡片阴影 */
+.card-shadow{
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.card-shadow:hover{
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+.crad-title{
+    font-family: cursive;
+    font-size: 20px;
+    font-weight: bold;
+}
+.card-header{
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    background-color: transparent !important;
+}
+.articles{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.text-limit {
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+  }
+</style>
+{% endblock %}

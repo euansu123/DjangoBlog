@@ -38,8 +38,8 @@
                 </a>
                {% endfor %}
               </div>
-
-              <div class="content-operate">
+              {% if user.is_superuser %}
+                  <div class="content-operate">
                 <a href="{% url 'article:article_update' article.uuid %}" class="text-decoration-none">
                     修改文章
                   </a>
@@ -49,6 +49,8 @@
                     删除文章
                   </a>
               </div>
+              {% endif %}
+              
             </div>
           <div class="right">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
