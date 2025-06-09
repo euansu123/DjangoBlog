@@ -1,7 +1,7 @@
 <!-- extends表明此页面继承自 base.html 文件 -->
 {% extends "base.html" %} {% load static %}
 <!-- 写入 base.html 中定义的 title -->
-{% block title %} 写文章 | {{SITE_NAME}} {% endblock title %}
+{% block title %} 修改文章 | {{SITE_NAME}} {% endblock title %}
 <!-- 写入 base.html 中定义的 content -->
 {% block content %}
 
@@ -19,7 +19,7 @@
 </div>
 {% endif %}
 
-<div class="container">
+<!-- <div class="container">
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
             <form method="post" action="." class="my-4">
@@ -30,35 +30,87 @@
             </form>
         </div>
     </div>
+</div> -->
+
+<head>
+    <link rel="stylesheet" href="{% static 'editor.md/css/editormd.min.css' %}" />
+</head>
+<div class="container">
+   <div class="row justify-content-center">
+       <div class="col-12 col-md-10">
+           <form method="post" action="." class="my-4">
+               {% csrf_token %}
+               <!-- {{ article_post_form.media }}
+               {{ article_post_form.as_p }}
+               <button type="submit" class="btn btn-primary">文章发表</button> -->
+               <div class="mb-3">
+                   <label for="title" class="form-label">文章标题</label>
+                   <input type="text" class="form-control" id="title" name="title" placeholder="请输入标题" value="{{ article.title }}">
+                 </div>
+                 <div class="mb-3">
+                   <label for="category" class="form-label">文章分类</label>
+                   <select class="form-select" id="category" name="category">
+                       {% for category in categories %}
+                       <option value="{{ category.id }}" {% if article.category.id == category.id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                           <!-- <option value="{{ category.id }}">{{ category.name }}</option> -->
+                       {% endfor %}
+                   </select>
+                 </div>
+
+                 <div class="mb-3">
+                   <label for="tag" class="form-label">文章标签</label>
+                   <select multiple class="form-select" id="tag" name="tag">
+                     {% for tag in tags %}
+                           <option value="{{ tag.id }}" {% if tag.id in article.tags %}selected{% endif %}>{{ tag.name }}</option>
+                       {% endfor %}
+                   </select>
+                   <small class="form-text text-muted">按住 Ctrl (Windows) 或 ⌘ (Mac) 选择多个标签</small>
+                 </div>
+
+               <div id="editor">
+                   <textarea name="body" id="id_content" style="display:none;">{{  article.body  }}</textarea>
+               </div>
+               <button type="submit" class="btn btn-primary">提交</button>
+           </form>
+       </div>
+   </div>
 </div>
-    
-<!-- 写文章表单 -->
-{#<div class="container">#}
-{#    <div class="row">#}
-{#        <div class="col-12">#}
-{#            <br>#}
-{#            <!-- 提交文章的表单 -->#}
-{#            <form method="post" action=".">#}
-{#                <!-- Django中需要POST数据的地方都必须有csrf_token -->#}
-{#                {% csrf_token %}#}
-{#                <!-- 文章标题 -->#}
-{#                <div class="form-group">#}
-{#                    <!-- 标签 -->#}
-{#                    <label for="title">文章标题</label>#}
-{#                    <!-- 文本框 -->#}
-{#                    <input type="text" class="form-control" id="title" name="title" value="{{article.title}}">#}
-{#                </div>#}
-{#                <!-- 文章正文 -->#}
-{#                <div class="form-group">#}
-{#                    <label for="body">文章正文</label>#}
-{#                    <!-- 文本区域 -->#}
-{#                    <textarea type="text" class="form-control" id="body" name="body" rows="12">{{ article.body }}</textarea>#}
-{#                </div>#}
-{#                <!-- 提交按钮 -->#}
-{#                <button type="submit" class="btn btn-primary my-3">提交</button>#}
-{#            </form>#}
-{#        </div>#}
-{#    </div>#}
-{#</div>#}
+
+
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'editor.md/editormd.min.js' %}"></script>
+
+    <script>
+        var editor = editormd("editor", {
+            width: "100%",
+            height: 500,
+            path: "{% static 'editor.md/lib/' %}",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "png", "gif", "bmp", "webp"],
+            imageUploadURL: "{% url 'article:upload_image' %}", 
+            crossDomainUpload: false,  // 设置为false，因为我们在同一域名下
+            ploadCallbackURL: "",     // 不需要回调URL
+        });
+
+
+        // function submitForm(event) {
+        //     event.preventDefault(); // 阻止表单默认提交行为
+        //     console.log("提交表单");
+        //     const form = document.getElementById('articleForm');
+        //     const uuidInput = document.createElement('input');
+        //     uuidInput.type = 'hidden';
+        //     uuidInput.name = 'uuid';
+        //     uuidInput.value = '{{ article.uuid }}';
+        //     form.appendChild(uuidInput);
+        //     form.submit(); // 提交表单
+        // }
+    </script>
+    <style>
+        .container{
+            max-width: 90% !important;
+        }
+    </style>
     
 {% endblock content %}

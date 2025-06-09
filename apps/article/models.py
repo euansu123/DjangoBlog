@@ -7,10 +7,9 @@ from django.utils import timezone
 
 from django.conf import settings
 
-from ckeditor.fields import RichTextField
+# from ckeditor.fields import RichTextField
 # 上传功能
-from ckeditor_uploader.fields import RichTextUploadingField
-from pip._vendor.rich.markup import Tag
+# from ckeditor_uploader.fields import RichTextUploadingField
 
 class Category(models.Model):
     """
@@ -19,7 +18,7 @@ class Category(models.Model):
     # 分类名
     name = models.CharField(max_length=100, unique=True)
     # 分组图标
-    icon = models.ImageField(upload_to='category/%Y%m%d/', blank=True)
+    icon = models.ImageField(upload_to='category', blank=True)
     # 分组描述
     description = models.TextField(max_length=500, blank=True)
     # 创建时间
@@ -43,7 +42,7 @@ class ArticlePost(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     # 文章标题。models.CharField 为字符串字段，用于保存较短的字符串，比如标题
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, unique=True)
 
     # 文章正文。保存大量文本使用 TextField
     # body = models.TextField()

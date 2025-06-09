@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from DjangoBlog.views import upload_view, browse_view
 from article.views import article_list
 
 urlpatterns = [
@@ -31,11 +30,7 @@ urlpatterns = [
     # 新增代码，配置userprofile的url
     path('userprofile/', include('userprofile.urls', namespace='userprofile')),
     # 重置密码
-    path('ckeditor/', include('ckeditor_uploader.urls')),
-    # 上传图片和浏览图片
-    path('custom_upload/', upload_view, name='custom_upload'),
-    path("custom_browse/", browse_view, name="custom_browse"),
-    
+    path('search/', include('haystack.urls')), 
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

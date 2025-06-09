@@ -6,9 +6,10 @@
       <div class="d-flex align-items-center">
         <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none"> 
           <img src="{% static 'images/logo.png' %}" width="40" height="40" alt="Logo" class="bi me-2">
+            <!-- 在移动端只显示网站名称 -->
+            <span class="d-md-block">{{ SITE_NAME }}</span>
         </a>
-        <!-- 在移动端只显示网站名称 -->
-        <span class="d-md-block">{{ SITE_NAME }}</span>
+        
       </div>
 
       <!-- 导航菜单 -->
@@ -20,12 +21,15 @@
             <li><a href="/article/category/" class="nav-link px-2 link-secondary">专题</a></li>
             <li><a href="/article/tags/" class="nav-link px-2 link-secondary">标签</a></li>
             <li><a href="/article/archives/" class="nav-link px-2 link-secondary">归档</a></li>
-            <li><a href="#" class="nav-link px-2 link-secondary">在线工具</a></li>
+            <!-- <li><a href="#" class="nav-link px-2 link-secondary">在线工具</a></li> -->
           </ul>
           
           <!-- 搜索框 -->
-          <form class="me-3" role="search"> 
+          <!-- <form class="me-3" role="search"> 
             <input type="search" class="form-control" placeholder="Search..." aria-label="Search"> 
+          </form> -->
+          <form class="me-3 mt-1" role="search" method="get" action="/search/"> 
+            <input type="search" name="q" class="form-control form-control-sm" placeholder="站内搜索" aria-label="Search"> 
           </form>
         </div>
 
@@ -70,7 +74,7 @@
 </header>
 
 <!-- 移动端的侧边栏菜单 -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="navbarOffcanvas">
+<div class="offcanvas offcanvas-end" tabindex="-1" id="navbarOffcanvas" aria-labelledby="navbarOffcanvasLabel">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title">菜单</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
@@ -87,7 +91,7 @@
       <li><a href="/article/category/" class="nav-link link-secondary">专题</a></li>
       <li><a href="/article/tags/" class="nav-link link-secondary">标签</a></li>
       <li><a href="/article/archives/" class="nav-link link-secondary">归档</a></li>
-      <li><a href="#" class="nav-link link-secondary">在线工具</a></li>
+      <!-- <li><a href="#" class="nav-link link-secondary">在线工具</a></li> -->
       {% if not user.is_authenticated %}
       <li><hr class="dropdown-divider"></li>
       <li><a href="{% url 'userprofile:login' %}" class="nav-link link-secondary">登录</a></li>

@@ -11,7 +11,11 @@
       <a class="text-decoration-none text-reset" href="{% url 'article:article_category_detail' category.id %}">
         <div class="card ms-2" style="width: 16rem;overflow-x: hidden;">
           <div class="card-image-wrapper ">
+            {% if category.icon %}
             <img src="{{category.icon.url}}" class="card-img-top" alt="...">
+            {% else %}
+            <img src="{% static 'images/category.jpg' %}" alt="Default Icon">
+            {% endif %}
           </div>
             <div class="card-body">
               <div style="text-align: center;">

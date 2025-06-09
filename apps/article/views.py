@@ -7,7 +7,7 @@ from datetime import datetime
 # 导入数据模型ArticlePost
 # from .models import ArticlePost
 # 导入文章表单ArticlePostForm
-from article.forms import ArticlePostForm
+from article.forms import ArticlePostForm, ArticleUpdateForm
 # 导入django自带的用户模型User
 from django.contrib.auth.models import User
 # 
@@ -64,7 +64,26 @@ def article_detail(request, id):
         'markdown.extensions.codehilite',
         # 目录扩展 
         'markdown.extensions.toc',
-        ]
+        'markdown.extensions.fenced_code',
+        'markdown.extensions.tables'
+        ],
+        extension_configs={
+        'markdown.extensions.codehilite': {
+            'css_class': 'codehilite',
+            'linenums': True,  # 显示行号
+            'guess_lang': True,  # 允许自动检测语言
+            'use_pygments': True,  # 使用Pygments来高亮代码
+            'noclasses': False,  # 使用classes而不是内联样式
+        },
+        'markdown.extensions.toc': {
+            'permalink': False,  # 为标题添加永久链接
+            'slugify': lambda x, y: x.lower().replace(' ', '-'),  # 自定义标题ID生成
+            'toc_class': 'toc',  # 目录的CSS类名
+        },
+        'markdown.extensions.fenced_code': {
+            'lang_prefix': 'language-',  # 代码块语言类名前缀
+        }
+    }
     )
     article.body = md.convert(article.body)
     # 标签颜色
@@ -87,6 +106,8 @@ def article_create(request):
             # 指定数据库中 id=1 的用户为作者
             # new_article.author = User.objects.get(id=1)
             new_article.author = UserInfo.objects.get(id=1)
+            # 处理markdown 文章内容
+            new_article.body = request.POST.get('body', '').replace('\r\n', '\n')
             # 将新文章保存到数据库中
             new_article.save()
             # 保存标签关系
@@ -141,29 +162,44 @@ def article_update(request, id):
     article = ArticlePost.objects.get(uuid=id)
     if request.method == 'POST':
         # 将提交的数据赋值到表单实例中
-        article_post_form = ArticlePostForm(data=request.POST)
+        article_post_form = ArticleUpdateForm(data=request.POST, instance=article)
         # 判断提交的数据是否满足模型的要求
         if article_post_form.is_valid():
             # 保存新写入的 title、body 数据并保存
             article.title = request.POST['title']
             article.body = request.POST['body']
+            # 更新分类
+            article.category_id = request.POST['category']
+            # 更新标签关系
+            article.tag.set(request.POST.getlist('tag'))
             article.save()
             # 完成后返回到修改后的文章中。需传入文章的 id 值
             return redirect("article:article_detail", id=id)
         # 如果数据不合法，返回错误信息
         else:
             # 创建表单类实例
-            article_post_form = ArticlePostForm()
+            article_post_form = ArticleUpdateForm(instance=article)
+            # 标签
+            tags = [{"id":tag.id, "name":tag.name} for tag in ArticleTag.objects.all()]
+            # 分组
+            categories = [{"id":category.id, "name":category.name} for category in Category.objects.all()]
+            # 获取标签的id信息
+            article.tags = [tag.id for tag in article.tag.all()]
             # 赋值上下文，将 article 文章对象也传递进去，以便提取旧的内容
-            context = { 'article': article, 'article_post_form': article_post_form , 'msg':"填写的文章内容有误，请重新填写！"}
+            context = { 'article': article, 'article_post_form': article_post_form , 'msg':"填写的文章内容有误，请重新填写！" , 'categories':categories, 'tags':tags}
             # 将响应返回到模板中
             return render(request, 'article/update.html', context)
     else:
         # 创建表单类实例，使用 instance 参数初始化表单，填充已有的数据
-        article_post_form = ArticlePostForm(instance=article)
+        article_post_form = ArticleUpdateForm(instance=article)
+        # 标签
+        tags = [{"id":tag.id, "name":tag.name} for tag in ArticleTag.objects.all()]
+        # 分组
+        categories = [{"id":category.id, "name":category.name} for category in Category.objects.all()]
+        # 获取标签的id信息
+        article.tags = [tag.id for tag in article.tag.all()]
         # 赋值上下文，将 article 文章对象也传递进去，以便提取旧的内容
-        context = { 'article': article, 'article_post_form': article_post_form }
-        print(context)
+        context = { 'article': article, 'article_post_form': article_post_form, 'categories':categories, 'tags':tags}
         # 将响应返回到模板中
         return render(request, 'article/update.html', context)
 
@@ -186,7 +222,7 @@ def article_category_detail(request, id):
         category_obj = Category.objects.get(id=id)
         context["category"] = model_to_dict(category_obj)
         # 查询与专题关联的文章
-        article_query = ArticlePost.objects.filter(category=category_obj).order_by('-created')
+        article_query = ArticlePost.objects.filter(category=category_obj, is_deleted=False).order_by('-created')
         # 对查询到的文章进行序列化处理
         # model_to_dict 默认不会序列化主键字段
         # article_list = [model_to_dict(article, fields=['uuid', 'title', 'created']) for article in article_query]
@@ -210,10 +246,11 @@ def article_tags(request):
         {
             "id":tag.id,
             "name":tag.name, 
-            "count":tag.articlepost_set.count(), 
+            "count":tag.articlepost_set.filter(is_deleted=False).count(), 
             "color": tag_color[index % len(tag_color)]
             } for index,tag in enumerate(tagQuery)]
     # 返回上下文
+    print(tag_list)
     context = {'tags': tag_list }
     return render(request, 'article/tags.html', context)
 
@@ -229,7 +266,7 @@ def article_tag_detail(request, id):
         {
             "id":tag.id,
             "name":tag.name, 
-            "count":tag.articlepost_set.count(), 
+            "count":tag.articlepost_set.filter(is_deleted=False).count(), 
             "color": tag_color[index % len(tag_color)]
             } for index,tag in enumerate(tagQuery)]
     # 返回上下文

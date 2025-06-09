@@ -13,7 +13,7 @@
 </head>
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-12 col-md-10 col-lg-8">
+        <div class="col-12 col-md-10">
             <form method="post" action="." class="my-4">
                 {% csrf_token %}
                 <!-- {{ article_post_form.media }}
@@ -66,4 +66,9 @@
             ploadCallbackURL: "",     // 不需要回调URL
         });
     </script>
+    <style>
+        .container{
+            max-width: 90% !important;
+        }
+    </style>
 {% endblock content %}
